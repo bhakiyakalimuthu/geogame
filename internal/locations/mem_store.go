@@ -15,7 +15,7 @@ func NewMemStore(locationMap map[interface{}]LocationStoreModel) *MemStore {
 }
 
 func (m *MemStore) Create(ctx context.Context, location LocationStoreModel) error {
-	m.locationMap[location.id] = location
+	m.locationMap[location.ID] = location
 	return nil
 }
 

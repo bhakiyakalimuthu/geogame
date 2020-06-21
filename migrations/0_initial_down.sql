@@ -1,0 +1,3 @@
+DROP EXTENSION IF EXISTS postgis;
+DROP TABLE clients;
+DROP TABLE locations;

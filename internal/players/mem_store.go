@@ -26,11 +26,16 @@ func (m *MemStore) CreateClient(ctx context.Context, model *ClientStoreModel) er
 
 func (m *MemStore) UpdateName(ctx context.Context, userID, name string) error {
 	client := m.clientMap[userID]
-	client.FullName = name
+	client.Name = name
 	return nil
 }
 
-func (m *MemStore) UpdateLocation(ctx context.Context, userID string, point locations.Location) error {
+func (m *MemStore) UpdateLocation(ctx context.Context, userID string, point locations.LocationStoreModel) error {
+	client := m.clientMap[userID]
+	client.LocationID = toNullString(point.ID)
+	client.Point = point.Point
+	client.LocationType = toNullString(point.LocationType.String())
+	client.LocationName = toNullString(point.LocationName)
 	return nil
 }
 

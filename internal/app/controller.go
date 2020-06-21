@@ -62,7 +62,7 @@ func (c *Controller) SetupRouter(router chi.Router) error {
 		r.Post("/login", c.Login)
 		r.With(middleware.IsClientAllowed(c.jwtAuther)).Post("/loc/send", c.SendLocation)
 		r.With(middleware.IsClientAllowed(c.jwtAuther)).Put("/update-name", c.UpdateName)
-		r.Get("/loc/get", c.GetLocation)
+		r.With(middleware.IsClientAllowed(c.jwtAuther)).Get("/loc/get", c.GetClientLocation)
 	})
 
 	return nil
@@ -126,18 +126,21 @@ func (c *Controller) DeleteLocation(w http.ResponseWriter, r *http.Request) {
 func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
 	var payload players.RegisterPayload
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-		writeError(w, http.StatusBadRequest, err)
+		writeResponse(w, http.StatusBadRequest, err)
 		return
 	}
 	if payload.Email == "" {
+		c.logger.Error("Register: failed to register", zap.Error(errors.New("empty email id")))
 		writeError(w, http.StatusBadRequest, errors.New("empty email id"))
 		return
 	}
 	if payload.Password == "" {
+		c.logger.Error("Register: failed to register", zap.Error(errors.New("empty password")))
 		writeError(w, http.StatusBadRequest, errors.New("empty password id"))
 		return
 	}
-	if payload.FullName == "" {
+	if payload.Name == "" {
+		c.logger.Error("Register: failed to register", zap.Error(errors.New("empty name")))
 		writeError(w, http.StatusBadRequest, errors.New("empty name"))
 		return
 	}
@@ -156,15 +159,18 @@ func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if payload.Email == "" {
+		c.logger.Error("Login: failed to register", zap.Error(errors.New("empty email id")))
 		writeError(w, http.StatusBadRequest, errors.New("empty email id"))
 		return
 	}
 	if payload.Password == "" {
+		c.logger.Error("Login: failed to register", zap.Error(errors.New("empty password")))
 		writeError(w, http.StatusBadRequest, errors.New("empty password id"))
 		return
 	}
 	res, err := c.players.Login(r.Context(), payload)
 	if err != nil {
+
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
@@ -178,13 +184,17 @@ func (c *Controller) SendLocation(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	var p players.UpdatePayload
+	var p locations.Location
 	if err = json.NewDecoder(r.Body).Decode(&p); err != nil {
 		writeError(w, http.StatusBadRequest, err)
 		return
 	}
-	// TODO: sendlocation
-	c.logger.Info(token.UserID)
+
+	if err := c.players.UpdateLocation(r.Context(), p, token.UserID); err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	writeResponse(w, http.StatusOK, nil)
 }
 
 func (c *Controller) UpdateName(w http.ResponseWriter, r *http.Request) {
@@ -198,7 +208,7 @@ func (c *Controller) UpdateName(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, err)
 		return
 	}
-	if p.FullName == "" {
+	if p.Name == "" {
 		writeError(w, http.StatusBadRequest, errors.New("empty name"))
 		return
 	}
@@ -208,6 +218,21 @@ func (c *Controller) UpdateName(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeResponse(w, http.StatusOK, nil)
+}
+
+func (c *Controller) GetClientLocation(w http.ResponseWriter, r *http.Request) {
+
+	token, err := extractTokenFromContext(r)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	res, err := c.players.GetLocation(r.Context(), token.UserID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	writeResponse(w, http.StatusOK, res)
 }
 
 func extractTokenFromContext(r *http.Request) (*middleware.AccessToken, error) {
@@ -229,11 +254,16 @@ func writeResponse(w http.ResponseWriter, statusCode int, data interface{}) {
 }
 
 func writeError(w http.ResponseWriter, statusCode int, httpError error) {
+
 	w.Header().Set(HTTPContentType, HTTPApplicationJSON)
 	w.WriteHeader(statusCode)
 
-	if err := json.NewEncoder(w).Encode(httpError); err != nil {
+	if err := json.NewEncoder(w).Encode(&ErrorResponse{Error: httpError.Error()}); err != nil {
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
+}
+
+type ErrorResponse struct {
+	Error string
 }

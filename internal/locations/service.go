@@ -30,10 +30,10 @@ func NewDefaultService(logger *zap.Logger, store Store) *DefaultService {
 func (d *DefaultService) Create(ctx context.Context, location Location) error {
 
 	loc := LocationStoreModel{
-		id:           location.ID,
-		point:        toPoint(&location.GeoPoint),
-		locationName: location.MetaData.LocationName,
-		locationType: LocationType(location.MetaData.LocationType),
+		ID:           location.ID,
+		Point:        toPoint(&location.GeoPoint),
+		LocationName: location.MetaData.LocationName,
+		LocationType: LocationType(location.MetaData.LocationType),
 	}
 	if err := d.store.Create(ctx, loc); err != nil {
 		d.logger.Error("Create: failed to create location to store", zap.Any("location", location), zap.Error(err))
@@ -45,10 +45,10 @@ func (d *DefaultService) Create(ctx context.Context, location Location) error {
 
 func (d *DefaultService) Update(ctx context.Context, location Location) error {
 	loc := LocationStoreModel{
-		id:           location.ID,
-		point:        toPoint(&location.GeoPoint),
-		locationName: location.MetaData.LocationName,
-		locationType: LocationType(location.MetaData.LocationType),
+		ID:           location.ID,
+		Point:        toPoint(&location.GeoPoint),
+		LocationName: location.MetaData.LocationName,
+		LocationType: LocationType(location.MetaData.LocationType),
 	}
 	if err := d.store.Update(ctx, location.ID, loc); err != nil {
 		d.logger.Error("Create: failed to update location to store", zap.Any("location", location), zap.Error(err))
@@ -67,14 +67,14 @@ func (d *DefaultService) Get(ctx context.Context, id string) (*Location, error) 
 		return nil, err
 	}
 	l := &Location{
-		ID: loc.id,
+		ID: loc.ID,
 		GeoPoint: GeoPoint{
-			Longitude: loc.point.Lon(),
-			Latitude:  loc.point.Lat(),
+			Longitude: loc.Point.Lon(),
+			Latitude:  loc.Point.Lat(),
 		},
 		MetaData: MetaData{
-			LocationName: loc.locationName,
-			LocationType: loc.locationType.String(),
+			LocationName: loc.LocationName,
+			LocationType: loc.LocationType.String(),
 		},
 	}
 	return l, nil

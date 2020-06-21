@@ -46,8 +46,8 @@ func toGeoPoint(p Point) *GeoPoint {
 }
 
 type LocationStoreModel struct {
-	id           string
-	point        Point
-	locationName string
-	locationType LocationType
+	ID           string       `db:"loc_id"`
+	Point        Point        `db:"point"`
+	LocationName string       `db:"loc_name"`
+	LocationType LocationType `db:"loc_type"`
 }
