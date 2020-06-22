@@ -22,4 +22,15 @@ image:
 test_unit:
 	$(GOCMDTEST) test ./... -mod=vendor -count=1
 
+.PHONY: up
+up:
+	@docker-compose -f docker-compose.yaml up
+# 	@make migrate
 
+.PHONY: down
+down:
+	@docker-compose -f docker-compose.yaml down  --remove-orphans --volumes
+
+.PHONY: migrate
+migrate:
+	docker run -v $(ROOT_DIR)/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database "postgres://geogameuser:password@localhost:5432/geo_game_db?sslmode=disable" up

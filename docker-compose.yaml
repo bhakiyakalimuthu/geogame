@@ -4,7 +4,7 @@ services:
     container_name: app-geogame
     build: .
     ports:
-      - 8080:8080
+      - "8080:8080"
     restart: on-failure
     volumes:
       - geogame:/usr/src/app/
@@ -12,42 +12,28 @@ services:
       - postgis-geogame
     networks:
       - geogame-network
-#      - new
+    links:
+      - postgis-geogame
 
   postgis-geogame:
     image: kartoza/postgis
-    container_name: pg-geogame
+    container_name: pg_geogame
     environment:
       - POSTGRES_USER=geogameuser
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=geo_game_db
-#      - DATABASE_HOST=127.0.0.1
+      - DATABASE_HOST=localhost
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - database_postgres:/var/lib/postgresql/data
     networks:
       - geogame-network
-#      new:
-#        aliases:
-#          - database
-  migrate:
-    image: migrate/migrate
-    restart: on-failure
-    networks:
-      - geogame-network
-#      - new
-    volumes:
-      - $PWD/migrations:/migrations
-    command: ["-path", "/migrations", "-database",  "postgres://geogameuser:password@postgis-geogame:5432/geo_game_db?sslmode=disable", "up", "3"]
-    depends_on:
-      - postgis-geogame
-    links:
-      - postgis-geogame
+
 volumes:
   geogame:
   database_postgres:
 networks:
-#  new:
   geogame-network:
-    driver: bridge
+    driver:
+      bridge

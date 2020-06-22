@@ -99,7 +99,7 @@ func (p Postgres) GetClientByEmail(ctx context.Context, emailID string) (*Client
 	if err := p.db.GetContext(ctx, &c, stmt, emailID); err != nil {
 		if err == sql.ErrNoRows {
 			p.logger.Error("GetClientByEmail: client is not found for the provided email", zap.Error(err))
-			return nil, err
+			return nil, errors.New(" emailID :" + emailID + "is not registered")
 		}
 		p.logger.Error("GetClientByEmail: failed to get client by email from db", zap.Error(err))
 		return nil, err
@@ -113,7 +113,7 @@ func (p Postgres) GetClientByID(ctx context.Context, id string) (*ClientStoreMod
 	if err := p.db.GetContext(ctx, &c, stmt, id); err != nil {
 		if err == sql.ErrNoRows {
 			p.logger.Error("GetClientByID: client is not found for the provided id", zap.Error(err))
-			return nil, err
+			return nil, errors.New(" id :" + id + "is not registered")
 		}
 		p.logger.Error("GetClientByID: failed to get client by id from db", zap.Error(err))
 		return nil, err

@@ -15,7 +15,7 @@ import (
 type Option func(*PGWorker)
 
 type Config struct {
-	Host string `env:"PG_HOST"                   envDefault:"localhost"`
+	Host string `env:"PG_HOST"                   envDefault:"pg_geogame"`
 	Port int    `env:"PG_PORT"                   envDefault:"5432"`
 	Name string `env:"PG_DB"                     envDefault:"geo_game_db"`
 	User string `env:"PG_USER"                   envDefault:"geogameuser"`

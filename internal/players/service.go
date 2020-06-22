@@ -3,6 +3,7 @@ package players
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -62,7 +63,7 @@ func (d *DefaultService) Register(ctx context.Context, payload RegisterPayload) 
 	}
 	if err := d.store.CreateClient(ctx, &client); err != nil {
 		d.logger.Error("Register: failed to create client", zap.String("email", payload.Email), zap.Error(err))
-		return err
+		return errors.New("failed to create client:" + err.Error())
 	}
 	d.logger.Info("client store model : ", zap.Any("client", client))
 	return nil
@@ -75,7 +76,7 @@ func (d *DefaultService) Login(ctx context.Context, payload LoginPayload) (*APIR
 	client, err := d.store.GetClientByEmail(dbCtx, payload.Email)
 	if err != nil {
 		d.logger.Error("Login: failed to get client from db", zap.String("email", payload.Email), zap.Error(err))
-		return nil, err
+		return nil, errors.New("failed to login:" + err.Error())
 	}
 	// un-hash the hashed password by using password
 	if err := bcrypt.CompareHashAndPassword([]byte(client.Password), []byte(payload.Password)); err != nil {
@@ -105,7 +106,7 @@ func (d *DefaultService) UpdateName(ctx context.Context, payload UpdatePayload, 
 	defer cancel()
 	if err := d.store.UpdateName(dbCtx, clientID, payload.Name); err != nil {
 		d.logger.Error("UpdateName: failed to updateName to db", zap.String("clientID", clientID), zap.Error(err))
-		return err
+		return errors.New("failed to update name:" + err.Error())
 	}
 
 	return nil
@@ -128,7 +129,7 @@ func (d *DefaultService) UpdateLocation(ctx context.Context, payload locations.L
 	defer cancel()
 	if err := d.store.UpdateLocation(dbCtx, clientID, point); err != nil {
 		d.logger.Error("UpdateLocation: failed to update location to db", zap.String("clientID", clientID), zap.Error(err))
-		return err
+		return errors.New("failed to update location:" + err.Error())
 	}
 
 	return nil
@@ -145,7 +146,7 @@ func (d *DefaultService) GetLocation(ctx context.Context, clientID string) (*loc
 	model, err := d.store.GetClientByID(dbCtx, clientID)
 	if err != nil {
 		d.logger.Error("UpdateLocation: failed to update location to db", zap.String("clientID", clientID), zap.Error(err))
-		return nil, err
+		return nil, errors.New("failed to get location:" + err.Error())
 	}
 	loc := &locations.Location{
 		ID: model.LocationID.String,
