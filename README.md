@@ -39,12 +39,6 @@
 
   `POST`
   
-*  **URL Params**
-
-   **Required:**
- 
-   `{"id":"1","geoPoint": {"longitude":19.2,"latitude":58.1},"metaData":{"locationName":"Stockholm","locationType":"city"}}`
-
 * **Data Params**
 
    **Required:**
