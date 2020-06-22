@@ -26,7 +26,7 @@
 # How to create docker image
      make image
      
-## Admin Endpoint info
+# Admin Endpoint info
 **Create Location**
 ----
   Returns ok.
@@ -89,7 +89,7 @@
 
     `curl -X DELETE "http://localhost:8080/v1/admin/loc/1/delete"`
     
-## Client Endpoint info
+# Client Endpoint info
 
 **Register client**
 ----
