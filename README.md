@@ -150,4 +150,8 @@ Returns ok.
 * kartoza/postgis container is used to perform GIS operation
 * golang/alpine container is used
 * Oauth 2(JWT) is used for client endpoint authentication
+
+
+## Improvement
 * Admin endpoints don't have authentication.Certificate authentication can be added to protect in public env.
+* Right now location objects are stored in two different table.Instead keep the location in Locations table,make the clients to reference the location from Players table to Locations table.
