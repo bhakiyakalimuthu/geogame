@@ -30,6 +30,8 @@
 **Create Location**
 ----
   Returns ok.
+    
+    `{"Ok":"success"}`
 
 * **URL**
 
@@ -71,13 +73,17 @@
 ----
   Returns ok.
   
+  `{"Ok":"success"}`
+  
 * **Sample Call:**
 
     `curl -X PUT "http://localhost:8080/v1/admin/loc/update" -d '{"id":"1","geoPoint": {"longitude":19.2,"latitude":58.1},"metaData":{"locationName":"Paris","locationType":"city"}}'`
 
 **Delete Location**
 ----
-  Returns ok.
+ Returns ok.
+   
+   `{"Ok":"success"}`
   
 * **Sample Call:**
 
@@ -89,6 +95,8 @@
 ----
 
 Returns ok.
+  
+  `{"Ok":"success"}`
   
 * **Sample Call:**
                 
@@ -110,6 +118,8 @@ Returns token.
 
 Returns ok.
   
+  `{"Ok":"success"}`
+  
 * **Sample Call:**
                 
 `curl -X PUT "http://localhost:8080/v1/client/update-name" -d '{"Name":"updated fullname"}' -H 'Authorization: Bearer ${Bearer token}'`
@@ -118,6 +128,8 @@ Returns ok.
 ----
 
 Returns ok.
+  
+  `{"Ok":"success"}`
   
 * **Sample Call:**
                 

@@ -85,7 +85,7 @@ func (c *Controller) CreateLocation(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	writeResponse(w, http.StatusOK, nil)
+	writeResponse(w, http.StatusOK, SuccessResponse{Ok: "success"})
 }
 
 func (c *Controller) GetLocation(w http.ResponseWriter, r *http.Request) {
@@ -109,7 +109,7 @@ func (c *Controller) UpdateLocation(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	writeResponse(w, http.StatusOK, nil)
+	writeResponse(w, http.StatusOK, SuccessResponse{Ok: "success"})
 }
 
 func (c *Controller) DeleteLocation(w http.ResponseWriter, r *http.Request) {
@@ -118,7 +118,7 @@ func (c *Controller) DeleteLocation(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	writeResponse(w, http.StatusOK, nil)
+	writeResponse(w, http.StatusOK, SuccessResponse{Ok: "success"})
 }
 
 // client endpoints
@@ -148,7 +148,7 @@ func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	writeResponse(w, http.StatusOK, nil)
+	writeResponse(w, http.StatusOK, &SuccessResponse{Ok: "success"})
 
 }
 
@@ -194,7 +194,7 @@ func (c *Controller) SendLocation(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	writeResponse(w, http.StatusOK, nil)
+	writeResponse(w, http.StatusOK, SuccessResponse{Ok: "success"})
 }
 
 func (c *Controller) UpdateName(w http.ResponseWriter, r *http.Request) {
@@ -217,7 +217,7 @@ func (c *Controller) UpdateName(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	writeResponse(w, http.StatusOK, nil)
+	writeResponse(w, http.StatusOK, SuccessResponse{Ok: "success"})
 }
 
 func (c *Controller) GetClientLocation(w http.ResponseWriter, r *http.Request) {
@@ -262,6 +262,10 @@ func writeError(w http.ResponseWriter, statusCode int, httpError error) {
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
+}
+
+type SuccessResponse struct {
+	Ok string
 }
 
 type ErrorResponse struct {
