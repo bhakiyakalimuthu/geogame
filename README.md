@@ -1,3 +1,15 @@
+# GEOGAME
+>* Geogame is a backend that serves parts of an API for a location based game using Go. 
+>* The backend consists of two services: ​Players ​and ​Locations
+ There are two endpoints: ​Admin ​and ​Client
+>* A client can ​Register​and ​Log In t​o the game with a username and password. Clients are authenticated using a ​JSON Web Token.
+>* Clients with valid authentication can perform an action (eg. send their location, change their username) as a demonstration of working authentication.
+>* A Location​​ consists of geographic coordinates and some metadata (eg. name, type). Admins can ​create, edit, read ​and​ delete​ locations.​
+Clients can r​ead​ locations.
+>* For data storage posggres is used, but also considered to make it simple to switch to a different storage solution.
+Similarly, the API is served over HTTP.
+>* Admin endpoints don’t have authentication, what options exist to protect them from being publicly accessible?
+
 # Pre requisites 
 - Mac(10.14)
 - Goland 2019.2
