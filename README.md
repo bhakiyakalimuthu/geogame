@@ -14,7 +14,7 @@ Similarly, the API is served over HTTP.
 - Mac(10.14)
 - Goland 2019.2
 - Go 1.13
- 
+- Docker  2.1.0.4
 # Build & Run
 > Application  is designed to run as a full stack which means all controller layer,business logic layer and persistent layers are containerised as single application.
 >* Application can be build and started by Makefile.
